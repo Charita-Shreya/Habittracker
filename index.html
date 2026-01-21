@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HabitFlow - Level Up Your Life</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div>
+            <h1>🎮 HabitFlow</h1>
+            <p style="color: #999; font-size: 12px;">Level Up Your Life</p>
+        </div>
+        <div class="nav">
+            <button onclick="switchTab('dashboard')">Dashboard</button>
+            <button onclick="switchTab('reports')">Reports</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Dashboard Tab -->
+        <div id="dashboard-tab" class="tab-content">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat">
+                    <div class="stat-value" id="total-xp">0</div>
+                    <div class="stat-label">Total XP</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="level">1</div>
+                    <div class="stat-label">Level</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="streak">0</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+            </div>
+
+            <!-- XP Progress -->
+            <div class="card">
+                <h3>Level Progress</h3>
+                <div class="xp-bar">
+                    <div class="xp-fill" id="xp-fill"></div>
+                </div>
+                <p id="xp-text" style="font-size: 12px; color: #999;">0 / 1000 XP</p>
+            </div>
+
+            <!-- Main Grid -->
+            <div class="main-grid">
+                <!-- Habits Section -->
+                <div class="card">
+                    <h2>📅 Habits</h2>
+                    <button onclick="openModal('habitModal')" style="margin-bottom: 15px; width: 100%;">+ Add Habit</button>
+                    <ul class="habit-list" id="habit-list">
+                        <li class="habit-item">
+                            <div>
+                                <strong>Morning Exercise</strong>
+                                <p style="font-size: 12px; color: #999;">+10 XP</p>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn-small" onclick="completeHabit(0)">Complete</button>
+                                <button class="btn-small delete" onclick="deleteHabit(0)">Delete</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Tasks Section -->
+                <div class="card">
+                    <h2>📋 Tasks</h2>
+                    <button onclick="openModal('taskModal')" style="margin-bottom: 15px; width: 100%;">+ Add Task</button>
+                    <ul class="task-list" id="task-list">
+                        <li class="task-item">
+                            <div>
+                                <strong>Complete Project</strong>
+                                <p style="font-size: 12px; color: #999;">+25 XP</p>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn-small" onclick="completeTask(0)">Done</button>
+                                <button class="btn-small delete" onclick="deleteTask(0)">Delete</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Achievements -->
+            <div class="card" style="margin-top: 20px;">
+                <h2>🏆 Achievements</h2>
+                <div class="achievements">
+                    <div class="achievement">
+                        <div class="achievement-icon">🔥</div>
+                        <div>7-Day Streak</div>
+                    </div>
+                    <div class="achievement">
+                        <div class="achievement-icon">⭐</div>
+                        <div>Level 5</div>
+                    </div>
+                    <div class="achievement">
+                        <div class="achievement-icon">🎯</div>
+                        <div>50 Habits Done</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reports-tab" class="tab-content" style="display: none;">
+            <div class="card">
+                <h2>📊 Reports</h2>
+                <p>Habit completion rate: <strong id="completion-rate">0</strong>%</p>
+                <p>Tasks completed: <strong id="tasks-completed">0</strong></p>
+                <p>Total XP earned: <strong id="total-xp-report">0</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Habit Modal -->
+    <div id="habitModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Habit</h2>
+            <form onsubmit="addHabit(event)">
+                <div class="form-group">
+                    <label>Habit Name</label>
+                    <input type="text" id="habit-name" required>
+                </div>
+                <div class="form-group">
+                    <label>XP Reward</label>
+                    <input type="number" id="habit-xp" value="10" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Frequency</label>
+                    <select id="habit-frequency">
+                        <option>Daily</option>
+                        <option>Weekly</option>
+                        <option>Monthly</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('habitModal')">Cancel</button>
+                    <button type="submit">Add Habit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Task</h2>
+            <form onsubmit="addTask(event)">
+                <div class="form-group">
+                    <label>Task Name</label>
+                    <input type="text" id="task-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="task-description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>XP Reward</label>
+                    <input type="number" id="task-xp" value="25" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Due Date</label>
+                    <input type="date" id="task-due-date">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('taskModal')">Cancel</button>
+                    <button type="submit">Add Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
